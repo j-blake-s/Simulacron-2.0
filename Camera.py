@@ -1,16 +1,11 @@
-from Input import wasd,key_log,is_mouse_dragged
-from PMath import great_circle_distance
 class Cam():
-
-
-
   def __init__( self, eye=None, center=None, up=None):
 
-    self.pos = eye if eye is not None else PVector(0,300,-200)
-    self.center = center if center is not None else PVector(0,0,0)
+    self.pos = eye if eye is not None else PVector(0,0,0)
+    self.center = center if center is not None else PVector(1,0,1)
     self.up = up if center is not None else PVector(0,-1,0)
 
-    self.manual()
+    self.static()
     
     self._CAM_FORWARD_SPEED = 5
     self._CAM_HORIZONTAL_SPEED = 5
@@ -24,9 +19,6 @@ class Cam():
     self._UP_KEY = 32 # SPACE
     self._DOWN_KEY = 16 # LEFT SHIFT
     self._SPRINT_KEY = 17 # LEFT CTRL
-
-    
-
 
 ################################## Main Loop ###########################################
 
@@ -49,10 +41,11 @@ class Cam():
     self._move = self._static
     return self
 
-  def manual(self):
+  def manual(self,some_input_src):
     self._move = self._manual
     self.theta = -45
     self.phi = 90
+    self.input_ = some_input_src
     return self
   
 ################################# Camera Movement ######################################
@@ -62,17 +55,19 @@ class Cam():
 
   def _manual(self):
     # Helper Methods
-    self._camera_move()
+    self._camera_move(self.input_)
     self._camera_pan()
     
 ###################################### Helper Methods ###################################################
 
-  def _camera_move(self):
+  def _camera_move(self,input_src):
 
-    # Get user input
-    WASD = wasd()
-    UD = key_log(self._UP_KEY,self._DOWN_KEY)
-    sprint = key_log(self._SPRINT_KEY)[0] * (self._SPRINT_SPEED - 1) + 1
+    # Get user input from the input src
+    keys = input_src.check("W","A","S","D",self._UP_KEY,self._DOWN_KEY,self._SPRINT_KEY)
+    s_w = keys["S"] - keys["W"]
+    a_d = keys["A"] - keys["D"]
+    u_d = keys[self._UP_KEY] - keys[self._DOWN_KEY]
+    sprint = (keys[self._SPRINT_KEY] * (self._SPRINT_SPEED - 1)) + 1
 
     # Pre-Calc useful things
     forward = PVector.sub(self.pos,self.center)
@@ -80,13 +75,12 @@ class Cam():
     vertical = PVector.cross(forward,horizontal)
 
     # Calculate Forward-Back Movement
-    for_back = PVector.mult(forward.normalize(),self._CAM_FORWARD_SPEED*(WASD["S"] - WASD["W"])*sprint)
+    for_back = PVector.mult(forward.normalize(),self._CAM_FORWARD_SPEED*s_w*sprint)
 
     # Calculate Side-to-Side Movement
-    side_side = PVector.mult(horizontal.normalize(),self._CAM_HORIZONTAL_SPEED*(WASD["A"] - WASD["D"])*sprint)
+    side_side = PVector.mult(horizontal.normalize(),self._CAM_HORIZONTAL_SPEED*a_d*sprint)
 
     # Calculate Up-Down Movement
-    u_d = UD[0] - UD[1]
     up_down = PVector.mult(vertical.normalize(),self._CAM_VERTICAL_SPEED*u_d)
 
     # Add changes to Cam
@@ -98,16 +92,23 @@ class Cam():
     e = self.pos
     r = PVector.sub(e,self.center).mag()
 
-    # Farther Drag Equals More Pan
+    # The change of the mouse determines how much the camera pans
     m_d_x = (pmouseX-mouseX) * self._HORI_PAN_SPEED
     m_d_y = (pmouseY-mouseY) * self._VERT_PAN_SPEED
 
-    if is_mouse_dragged() and PVector(m_d_x,m_d_y).mag() < 20:
+    # Mouse must be dragged in order to look around
+    # Any sudden snaps of the mouse will be ignored
+    if mousePressed and PVector(m_d_x,m_d_y).mag() < 20:
       self.phi += m_d_x % 360
       self.theta = max(-89,min(89,self.theta+m_d_y))
 
-      # ANGLES
-      x,y,z = great_circle_distance(self.theta,self.phi,r)
+      # Great Circle Distance
+      t = radians(self.theta)
+      p = radians(self.phi)
+
+      x = r * cos(p) * cos(t)
+      y = r * sin(t)
+      z = r * sin(p) * cos(t)
 
       self.center.set(PVector(e.x+x,e.y+y,e.z+z))
 

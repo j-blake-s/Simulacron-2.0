@@ -1,11 +1,11 @@
-from Input import * 
+from Input import InputManager
 from Camera import Cam
 from Graphics import floor
 
-scene_camera = Cam().manual()
+inp = InputManager()
+camera_ = Cam().manual(inp)
 def setup():
   fullScreen(P3D)
-  #noCursor()
 
 def draw():
   background(0)
@@ -21,6 +21,13 @@ def draw():
   sphere(50)
   popMatrix()
 
-  scene_camera.film()
+  camera_.film()
+
+
+def keyPressed():
+  inp.press_key(keyCode)
+
+def keyReleased():
+  inp.release_key(keyCode)
 
   

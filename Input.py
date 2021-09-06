@@ -1,66 +1,64 @@
-############################################## MOUSE ##############################################
-_mouse_is_dragged = False
-_mouse_wrap_buffer = 100
+class InputManager:
+  
+  def __init__(self):
 
-def mouseDragged():
-  global _mouse_is_dragged
-  _mouse_is_dragged = True
+    self._code_to_press_dict = {}
+    # Pre-init the values to false
+    for i in range(256):
+      self._code_to_press_dict[i] = False
 
-def mouseReleased():
-  global _mouse_is_dragged
-  _mouse_is_dragged = False
 
-def is_mouse_dragged():
-  return _mouse_is_dragged
+    # Init Special Keys
+    self._name_to_code_dict = {
+      "BACKSPCE" : 8,
+      "TAB" : 9,
+      "ENTER" : 13,
+      "SHIFT" : 16,
+      "CTRL" : 17,
+      "ALT" : 18,
+      "ESCAPE" : 27,
+      "SPACE" : 32,
+      "LEFT" : 37,
+      "UP" : 38,
+      "RIGHT" : 39,
+      "DOWN" : 40
+    }
 
-############################################## KEYS ###############################################
-_key_dict = {}
+    # Init Numbers
+    for i in range(10):
+      print(i)
+      self._name_to_code_dict[str(i)] = i+48
 
-def keyPressed():
-  log_key(keyCode,True)
 
-def keyReleased():
-  log_key(keyCode,False)
+    # Init Letters
+    alpha = [ "A","B","C","D","E","F","G","H","I","J","K","L","M",
+              "N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+    for i in range(65,91):
+      self._name_to_code_dict[alpha[i-65]] = i
+      
 
-def log_key(key_code,pressed):
-  global _key_dict
-  _key_dict[key_code] = pressed
+  def press_key(self,key_code):
+    self._code_to_press_dict[key_code] = True
 
-def key_log(*args):
-  global _key_dict
-  num_args = len(args)
+  def release_key(self,key_code):
+    self._code_to_press_dict[key_code] = False
 
-  if num_args is 0:
-    return _key_dict
+  def check(self,*args):
+    name_to_press_dict = {}
 
-  else:
-    keys = []
-    for arg in args:
-      keys.append(False if _key_dict.get(arg) is None else _key_dict[arg])
-    return keys
+    for name in args:
 
-def arrows():
-  vals = key_log(38,40,37,39)
-  names = ("UP","DOWN","LEFT","RIGHT")
-  res = {}
-  for i in range(len(vals)):
-    res[names[i]] = vals[i]
-  return res
+      code = self._name_to_code_dict.get(name)
+      code = name if code is None else code  # If name is None, then either arg is key code or missing key name
 
-def wasd():
-  vals = key_log(87,65,83,68)
-  names = ("W","A","S","D")
-  res = {}
-  for i in range(len(vals)):
-    res[names[i]] = vals[i]
-  return res
+      is_pressed = self._code_to_press_dict.get(code)
+      is_pressed = False if is_pressed is None else is_pressed # If still None, then key does not exist
 
-def numbers():
-  vals = key_log(48,49,50,51,52,53,54,55,56)
-  res = {}
-  for i in range(9):
-    res[str(i)] = vals[i]
-  return res
+      name_to_press_dict[name] = is_pressed
+
+    return name_to_press_dict
+
+ 
 
 
 
