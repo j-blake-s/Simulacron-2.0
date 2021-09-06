@@ -1,6 +1,6 @@
+# Given 2 angles (t)heta and (p)hi, and a (r)adius for a sphere,
+# calculates the corresponding position on said sphere.
 def great_circle_distance(t,p,r):
-  
-  # Convert to Radians
   t = radians(t)
   p = radians(p)
 
