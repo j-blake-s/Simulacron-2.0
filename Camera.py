@@ -2,8 +2,8 @@ class Cam():
   def __init__( self, eye=None, center=None, up=None):
 
     self.pos = eye if eye is not None else PVector(0,0,0)
-    self.center = center if center is not None else PVector(1,0,1)
-    self.up = up if center is not None else PVector(0,-1,0)
+    self.center = center if center is not None else PVector(self.pos.x+1,self.pos.y,self.pos.z+1)
+    self.up = up if up is not None else PVector(0,-1,0)
 
     self.static()
     

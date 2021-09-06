@@ -26,7 +26,6 @@ class InputManager:
 
     # Init Numbers
     for i in range(10):
-      print(i)
       self._name_to_code_dict[str(i)] = i+48
 
 
