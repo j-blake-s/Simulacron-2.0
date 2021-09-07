@@ -1,12 +1,16 @@
 class Cam():
-  def __init__( self, eye=None, center=None, up=None):
 
+
+
+
+  def __init__( self, eye=None, center=None, up=None):
     self.pos = eye if eye is not None else PVector(0,0,0)
     self.center = center if center is not None else PVector(self.pos.x+1,self.pos.y,self.pos.z+1)
     self.up = up if up is not None else PVector(0,-1,0)
-
     self.static()
     
+################################################ CONSTANTS #######################################################
+
     self._CAM_FORWARD_SPEED = 20
     self._CAM_HORIZONTAL_SPEED = 20
     self._CAM_VERTICAL_SPEED = 20
@@ -20,7 +24,12 @@ class Cam():
     self._DOWN_KEY = 16 # LEFT SHIFT
     self._SPRINT_KEY = 18 # LEFT ALT
 
-################################## Main Loop ###########################################
+##################################################################################################################
+
+
+
+
+################################################# Main Loop ######################################################
 
   def film(self):
     self._move()
@@ -35,7 +44,7 @@ class Cam():
     u = self.up
     camera(e.x,e.y,e.z,c.x,c.y,c.z,u.x,u.y,u.z)
 
-################################## Monkey Patching #####################################
+############################################## Monkey Patching ###################################################
 
   def static(self):
     self._move = self._static
@@ -48,7 +57,7 @@ class Cam():
     self.input_ = some_input_src
     return self
   
-################################# Camera Movement ######################################
+############################################# Camera Movement ####################################################
 
   def _static(self):
     pass
@@ -58,7 +67,7 @@ class Cam():
     self._camera_move(self.input_)
     self._camera_pan()
     
-###################################### Helper Methods ###################################################
+############################################# Helper Methods ####################################################
 
   def _camera_move(self,input_src):
 
