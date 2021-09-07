@@ -6,6 +6,7 @@ from Particle import Particle
 from System import System
 from PMath import rand_vector
 from PEngine import converge
+from Path import Path
 
 _inp = InputManager()
 def keyPressed():
@@ -26,9 +27,11 @@ class EnvManager:
 
 
     self.sys = System()
-
+    self.paths = []
     for i in range(10):
-      self.sys.add(self.rand_particle(1000,5))
+      part = self.rand_particle(1000,5)
+      self.paths.append(Path(tracking=part))
+      self.sys.add(part)
 
 ############################################ CONSTANTS #################################################
 
@@ -63,6 +66,8 @@ class EnvManager:
     
     self.sys.apply_force_function(converge)
     self.sys.loop_all()
+    for path in self.paths:
+      path.loop()
  
   def clean_scene(self):
     pass
