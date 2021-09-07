@@ -9,3 +9,10 @@ def great_circle_distance(t,p,r):
   z = r * sin(p) * cos(t)
 
   return x,y,z
+
+
+def rand_vector(range_):
+  x = random(-range_,range_)
+  y = random(-range_,range_)
+  z = random(-range_,range_)
+  return PVector(x,y,z)
