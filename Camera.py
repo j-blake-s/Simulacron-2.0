@@ -7,18 +7,18 @@ class Cam():
 
     self.static()
     
-    self._CAM_FORWARD_SPEED = 5
-    self._CAM_HORIZONTAL_SPEED = 5
-    self._CAM_VERTICAL_SPEED = 5
+    self._CAM_FORWARD_SPEED = 20
+    self._CAM_HORIZONTAL_SPEED = 20
+    self._CAM_VERTICAL_SPEED = 20
     
-    self._VERT_PAN_SPEED = 0.1 # Up and Down
-    self._HORI_PAN_SPEED = 0.1 # Left and Right
+    self._VERT_PAN_SPEED = 0.13 # Up and Down
+    self._HORI_PAN_SPEED = 0.13 # Left and Right
 
-    self._SPRINT_SPEED = 2
+    self._SPRINT_SPEED = 3
 
     self._UP_KEY = 32 # SPACE
     self._DOWN_KEY = 16 # LEFT SHIFT
-    self._SPRINT_KEY = 17 # LEFT CTRL
+    self._SPRINT_KEY = 18 # LEFT ALT
 
 ################################## Main Loop ###########################################
 

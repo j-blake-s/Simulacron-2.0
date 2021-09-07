@@ -1,7 +1,8 @@
 
-from Graphics import floor
+from Graphics import floor,draw_line
 from Camera import Cam
 from Input import InputManager
+from Particle import Particle
 
 _inp = InputManager()
 def keyPressed():
@@ -9,6 +10,7 @@ def keyPressed():
 def keyReleased():
   _inp.release_key(keyCode)
 
+part = Particle(p=PVector(0,100,0))
 class EnvManager:
 
 
@@ -28,20 +30,22 @@ class EnvManager:
 
   def prep_scene(self):
     background(0)
-    #directionalLight(155,155,155,0,-1,0)
-
-  def scene(self):
     self._cam.film()
-
+    directionalLight(150,150,150,0,-1,0)
     floor(size=3000)
 
-    noStroke()
-    fill(100)
-    pushMatrix()
-    translate(0,200,0)
-    sphere(50)
-    popMatrix()
+    
+  def scene(self):
+    dist = PVector.sub(PVector(0,500,0),(part.pos))
+    dist.div(1000)
+    part.apply_force(dist)
+    dist.mult(500)
+    stroke(0,255,0)
+    draw_line(part.pos,dist,offset=True)
+    part.loop()
 
+
+   
   def clean_scene(self):
     pass
 
