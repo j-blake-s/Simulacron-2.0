@@ -3,10 +3,11 @@ class Cam():
 
 
 
-  def __init__( self, eye=None, center=None, up=None):
+  def __init__( self, eye=None, center=None, up=None, inp_src=None):
     self.pos = eye if eye is not None else PVector(0,0,0)
     self.center = center if center is not None else PVector(self.pos.x+1,self.pos.y,self.pos.z+1)
     self.up = up if up is not None else PVector(0,-1,0)
+    self.input_ = inp_src
     self.static()
     
 ################################################ CONSTANTS #######################################################
@@ -25,9 +26,6 @@ class Cam():
     self._SPRINT_KEY = 18 # LEFT ALT
 
 ##################################################################################################################
-
-
-
 
 ################################################# Main Loop ######################################################
 
@@ -50,11 +48,13 @@ class Cam():
     self._move = self._static
     return self
 
-  def manual(self,some_input_src):
+  def manual(self):
+    if (self.input_ is None):
+      return self
+
     self._move = self._manual
     self.theta = -45
     self.phi = 90
-    self.input_ = some_input_src
     return self
   
 ############################################# Camera Movement ####################################################

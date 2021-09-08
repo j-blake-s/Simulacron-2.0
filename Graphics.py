@@ -12,7 +12,7 @@ def floor(size=500,ypos=0,grid=False):
 
 
 def draw_line(p1,p2,offset=False):
-  if offset:
+  if offset is True:
     p2.add(p1)
   line(p1.x,p1.y,p1.z,p2.x,p2.y,p2.z)
 

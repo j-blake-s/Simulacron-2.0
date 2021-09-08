@@ -13,7 +13,7 @@ class Particle:
     self.pos = p if p is not None else PVector(0,0,0)
     self.vel = v if v is not None else PVector(0,0,0)
     self.acc = a if a is not None else PVector(0,0,0)
-    self.mass = m if m > 0 else 1
+    self.mass = m if m > 0 else 100
     self.net_force = PVector(0,0,0)
 
 

@@ -5,14 +5,17 @@ from Input import InputManager
 from Particle import Particle
 from System import System
 from PMath import rand_vector
-from PEngine import converge
+from PEngine import single_gravity, system_gravity
 from Path import Path
 
 _inp = InputManager()
 def keyPressed():
   _inp.press_key(keyCode)
+
 def keyReleased():
   _inp.release_key(keyCode)
+
+
 
 class EnvManager:
 
@@ -21,17 +24,14 @@ class EnvManager:
 
 
     self._cam = Cam(
-      eye = PVector(0,200,0),
-      center = PVector(1,199,1)
-    ).manual(_inp)
+      eye = PVector(-1500,500,-1500),
+      center = PVector(-1499,500,-1499),
+      inp_src = _inp
+    ).manual()
 
 
     self.sys = System()
     self.paths = []
-    for i in range(10):
-      part = self.rand_particle(1000,5)
-      self.paths.append(Path(tracking=part))
-      self.sys.add(part)
 
 ############################################ CONSTANTS #################################################
 
@@ -43,6 +43,14 @@ class EnvManager:
 
 ########################################################################################################    
     
+
+  def setup(self):
+    self.set_perspective(0.5)
+    for _ in range(10):
+      part = self.rand_particle(1000,2)
+      part.mass = 100
+      self.paths.append(Path(part))
+      self.sys.add(part)
 
   def rand_particle(self,pos_range,vel_range=0):
       p = rand_vector(pos_range)
@@ -63,12 +71,20 @@ class EnvManager:
 
     
   def scene(self):
-    
-    self.sys.apply_force_function(converge)
+    p = PVector(0,2000,0)
+    point = Particle(p=p,m=1000)
+    system_gravity(self.sys)
+    self.sys.apply_force_function(single_gravity,point)
     self.sys.loop_all()
-    for path in self.paths:
-      path.loop()
+    for path in self.paths: path.loop()
  
   def clean_scene(self):
     pass
 
+
+
+  def set_perspective(self,fov_ratio):
+    fov = PI * fov_ratio
+    cameraZ = (height/2.0) / tan(fov/2.0)
+    perspective(fov, float(width)/float(height), 
+                cameraZ/10.0, cameraZ*10.0)
